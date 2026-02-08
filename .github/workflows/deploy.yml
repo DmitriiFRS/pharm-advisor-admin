@@ -1,0 +1,53 @@
+name: Build and Deploy Client Application
+
+on:
+   push:
+      branches:
+         - main
+jobs:
+   build-and-deploy:
+      runs-on: ubuntu-latest
+      env:
+         NODE_ENV: production
+         NEXT_PUBLIC_NODE_ENV: production
+      steps:
+         - name: Checkout Main Branch
+           uses: actions/checkout@v4
+           with:
+              fetch-depth: 0
+              ref: main
+
+         - name: Set up Node.js
+           uses: actions/setup-node@v4
+           with:
+              node-version: "20.x"
+
+         - name: Install Dependencies
+           run: npm install --production=false
+
+         - name: Create .env file
+           run: |
+              echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" > .env
+              echo "NEXT_PUBLIC_CLIENT_URL=${{ secrets.NEXT_PUBLIC_CLIENT_URL }}" >> .env
+
+         - name: Build Next.js Application
+           run: npm run build
+
+         - name: Install SSH Key
+           uses: shimataro/ssh-key-action@v2
+           with:
+              key: ${{ secrets.SSH_KEY }}
+              known_hosts: "unnecessary"
+              config: |
+                 Host *
+                   PubkeyAcceptedAlgorithms +ssh-rsa
+                   HostKeyAlgorithms +ssh-rsa
+
+         - name: Adding Known Hosts
+           run: ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
+         - name: Transfer with rsync
+           run: rsync -avz --delete -e "ssh -v" ./ ${{ secrets.USERNAME }}@${{ secrets.HOST }}:${{ secrets.TARGET_DIRECTORY }}/
+
+         - name: Start with PM2
+           run: ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd ${{ secrets.TARGET_DIRECTORY }} && (pm2 restart --cwd ${{ secrets.TARGET_DIRECTORY }} admin || pm2 start npm --name "admin" --cwd ${{ secrets.TARGET_DIRECTORY }} -- start)'

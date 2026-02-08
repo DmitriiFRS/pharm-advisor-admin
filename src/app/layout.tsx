@@ -29,7 +29,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
 interface RootLayoutProps {
 	children: React.ReactNode;
-	params: Promise<{ locale: string }>;
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {

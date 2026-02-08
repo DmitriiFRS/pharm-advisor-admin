@@ -22,10 +22,10 @@ const ContactsForm: React.FC<Props> = ({ initialData }) => {
 		defaultValues: initialData || {
 			phone: "",
 			email: "",
-			telegram: "",
+			telegramLink: "",
 			address: "",
-			instagram: "",
-			googleMaps: "",
+			instagramLink: "",
+			googleMapsLink: "",
 		},
 	});
 
@@ -92,9 +92,13 @@ const ContactsForm: React.FC<Props> = ({ initialData }) => {
 						<label className="text-14 font-medium text-black-primary mb-2 block">Telegram</label>
 						<div className="relative">
 							<Send className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
-							<input {...register("telegram")} placeholder="https://t.me/username" className={inputClass(!!errors.telegram)} />
+							<input
+								{...register("telegramLink")}
+								placeholder="https://t.me/username"
+								className={inputClass(!!errors.telegramLink)}
+							/>
 						</div>
-						{errors.telegram && <p className="text-12 text-red-500 mt-1">{errors.telegram.message}</p>}
+						{errors.telegramLink && <p className="text-12 text-red-500 mt-1">{errors.telegramLink.message}</p>}
 					</div>
 
 					<div>
@@ -102,12 +106,12 @@ const ContactsForm: React.FC<Props> = ({ initialData }) => {
 						<div className="relative">
 							<Instagram className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
 							<input
-								{...register("instagram")}
+								{...register("instagramLink")}
 								placeholder="https://instagram.com/username"
-								className={inputClass(!!errors.instagram)}
+								className={inputClass(!!errors.instagramLink)}
 							/>
 						</div>
-						{errors.instagram && <p className="text-12 text-red-500 mt-1">{errors.instagram.message}</p>}
+						{errors.instagramLink && <p className="text-12 text-red-500 mt-1">{errors.instagramLink.message}</p>}
 					</div>
 
 					<div className="md:col-span-2">
@@ -115,12 +119,12 @@ const ContactsForm: React.FC<Props> = ({ initialData }) => {
 						<div className="relative">
 							<Map className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
 							<input
-								{...register("googleMaps")}
+								{...register("googleMapsLink")}
 								placeholder="https://maps.google.com/..."
-								className={inputClass(!!errors.googleMaps)}
+								className={inputClass(!!errors.googleMapsLink)}
 							/>
 						</div>
-						{errors.googleMaps && <p className="text-12 text-red-500 mt-1">{errors.googleMaps.message}</p>}
+						{errors.googleMapsLink && <p className="text-12 text-red-500 mt-1">{errors.googleMapsLink.message}</p>}
 					</div>
 				</div>
 

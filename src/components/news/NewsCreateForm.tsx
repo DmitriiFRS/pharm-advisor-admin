@@ -8,15 +8,17 @@ import RichTextInput from "@/src/components/shared/inputs/RichTextInput";
 import SingleDateSelect from "@/src/components/shared/inputs/SingleDateSelect";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const NewsCreateForm = () => {
-	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const {
 		register,
 		handleSubmit,
 		setValue,
 		watch,
+		reset,
 		control,
 		formState: { errors },
 	} = useForm<NewsFormData>({
@@ -26,21 +28,41 @@ const NewsCreateForm = () => {
 			titleUz: "",
 			descriptionRu: "",
 			descriptionUz: "",
-			date: "",
+			publishedAt: "",
 		},
 	});
 
 	const onSubmit = async (data: NewsFormData) => {
-		setIsSubmitting(true);
 		try {
-			console.log("Form Data:", data);
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 1000));
-			alert("Новость успешно создана (см. консоль)");
-		} catch (error) {
-			console.error(error);
+			setIsLoading(true);
+
+			const formData = new FormData();
+			formData.append("titleRu", data.titleRu);
+			formData.append("titleUz", data.titleUz);
+			formData.append("descriptionRu", data.descriptionRu);
+			formData.append("descriptionUz", data.descriptionUz);
+			formData.append("publishedAt", data.publishedAt);
+
+			if (data.image instanceof File) {
+				formData.append("image", data.image);
+			}
+
+			const response = await fetch("/api/post/news", {
+				method: "POST",
+				body: formData,
+			});
+
+			if (!response.ok) {
+				const errorData = await response.json();
+				throw new Error(errorData.error || "Ошибка при создании новости");
+			}
+
+			toast.success("Новость успешно создана");
+			reset();
+		} catch (error: unknown) {
+			toast.error((error as Error).message || "Ошибка при создании новости");
 		} finally {
-			setIsSubmitting(false);
+			setIsLoading(false);
 		}
 	};
 
@@ -89,10 +111,10 @@ const NewsCreateForm = () => {
 							</div>
 
 							<SingleDateSelect
-								name="date"
+								name="publishedAt"
 								setValue={setValue}
-								watchedDateValue={watch("date")}
-								error={errors.date}
+								watchedDateValue={watch("publishedAt")}
+								error={errors.publishedAt}
 								title="Дата публикации"
 								placeholder="Выберите дату"
 								className="w-full"
@@ -132,10 +154,10 @@ const NewsCreateForm = () => {
 				<div className="flex justify-end pt-4 border-t border-gray-100">
 					<button
 						type="submit"
-						disabled={isSubmitting}
+						disabled={isLoading}
 						className="bg-primary-gradient text-white px-8 py-3 rounded-xl font-medium shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
 					>
-						{isSubmitting && <Loader2 className="animate-spin w-4 h-4" />}
+						{isLoading && <Loader2 className="animate-spin w-4 h-4" />}
 						Создать новость
 					</button>
 				</div>

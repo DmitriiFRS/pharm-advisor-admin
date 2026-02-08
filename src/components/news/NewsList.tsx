@@ -6,8 +6,13 @@ import { useState } from "react";
 export interface INews {
 	id: number;
 	title: string;
-	description: string;
+	content: string;
+	slug: string;
+	isPublished: boolean;
+	publishedAt: string;
 	createdAt: string;
+	updatedAt: string;
+	imageId: number;
 }
 
 interface Props {
@@ -30,10 +35,27 @@ const NewsList: React.FC<Props> = ({ data, page, totalPages }) => {
 				columns={[
 					{ header: "Заголовок", accessorKey: "title" },
 					{
-						header: "Описание",
-						cell: (row) => <div className="line-clamp-2 max-w-[600px] text-gray-600">{row.description}</div>,
+						header: "Контент",
+						cell: (row) => (
+							<div className="line-clamp-2 max-w-[600px] text-gray-600" dangerouslySetInnerHTML={{ __html: row.content }} />
+						),
 					},
-					{ header: "Дата публикации", accessorKey: "createdAt" },
+					{
+						header: "Дата публикации",
+						cell: (row) => new Date(row.publishedAt || row.createdAt).toLocaleDateString("ru-RU"),
+					},
+					{
+						header: "Статус",
+						cell: (row) => (
+							<span
+								className={`px-2 py-1 rounded-full text-12 ${
+									row.isPublished ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
+								}`}
+							>
+								{row.isPublished ? "Опубликовано" : "Черновик"}
+							</span>
+						),
+					},
 				]}
 				isLoading={isLoading}
 				onEdit={(item) => console.log("Edit", item)}

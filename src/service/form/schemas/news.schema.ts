@@ -6,9 +6,9 @@ export const newsSchema = z.object({
 	}),
 	titleRu: z.string().min(1, "Введите заголовок на русском"),
 	titleUz: z.string().min(1, "Введите заголовок на узбекском"),
-	date: z.string().min(1, "Выберите дату публикации"),
-	descriptionRu: z.string().min(10, "Описание на русском должно быть длиннее 10 символов"),
-	descriptionUz: z.string().min(10, "Описание на узбекском должно быть длиннее 10 символов"),
+	publishedAt: z.string().min(1, "Выберите дату публикации"),
+	descriptionRu: z.string().min(2, "Описание на русском должно быть длиннее 2 символов"),
+	descriptionUz: z.string().min(2, "Описание на узбекском должно быть длиннее 2 символов"),
 });
 
 export type NewsFormData = z.infer<typeof newsSchema>;

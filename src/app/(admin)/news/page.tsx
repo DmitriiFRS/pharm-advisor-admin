@@ -1,27 +1,46 @@
 import NewsList, { INews } from "@/src/components/news/NewsList";
-
-const MOCK_NEWS: INews[] = Array.from({ length: 20 }).map((_, i) => ({
-	id: i + 1,
-	title: `Новость ${i + 1}`,
-	description:
-		"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
-	createdAt: new Date().toLocaleDateString("ru-RU"),
-}));
+import { ENDPOINTS } from "@/src/consts/endpoints";
+import { apiServerService } from "@/src/service/api/api.server";
+import { cookies } from "next/headers";
 
 interface Props {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
+interface NewsResponse {
+	data: INews[];
+	meta: {
+		total: number;
+		page: number;
+		limit: number;
+		totalPages: number;
+	};
+}
+
 const NewsPage = async (props: Props) => {
 	const searchParams = await props.searchParams;
-	const page = Number(searchParams.pageNumber) || 1;
+	const page = Number(searchParams.page) || 1;
 
-	// Mock pagination logic (Simulation of API)
-	const itemsPerPage = 10;
-	const totalPages = Math.ceil(MOCK_NEWS.length / itemsPerPage);
-	const currentData = MOCK_NEWS.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+	const cookieStore = await cookies();
+	const accessToken = cookieStore.get("accessToken")?.value;
+	const api = apiServerService(accessToken);
 
-	return <NewsList data={currentData} page={page} totalPages={totalPages} />;
+	const res = await api.get<NewsResponse>({
+		endpoint: ENDPOINTS.GET_NEWS,
+		queryParams: {
+			page,
+			limit: 10,
+		},
+		path: "",
+	});
+
+	console.log(res);
+
+	if (!res.data) {
+		return <div>No news found</div>;
+	}
+
+	return <NewsList data={res.data} page={res.meta.page} totalPages={res.meta.totalPages} />;
 };
 
 export default NewsPage;
