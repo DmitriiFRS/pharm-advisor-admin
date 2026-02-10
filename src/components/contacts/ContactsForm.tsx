@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "react-toastify";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { contactsSchema, ContactsFormData } from "@/src/service/form/schemas/contacts.schema";
@@ -32,12 +34,20 @@ const ContactsForm: React.FC<Props> = ({ initialData }) => {
 	const onSubmit = async (data: ContactsFormData) => {
 		setIsSubmitting(true);
 		try {
-			console.log("Contacts Data:", data);
-			// Simulate API call
-			await new Promise((resolve) => setTimeout(resolve, 1000));
-			alert("Контакты успешно обновлены (см. консоль)");
-		} catch (error) {
+			const res = await fetch("/api/patch/contacts", {
+				method: "PATCH",
+				body: JSON.stringify(data),
+			});
+
+			if (!res.ok) {
+				const errorData = await res.json();
+				throw new Error(errorData.error || "Ошибка при обновлении контактов");
+			}
+
+			toast.success("Контакты успешно обновлены");
+		} catch (error: unknown) {
 			console.error(error);
+			toast.error((error as Error).message || "Ошибка при обновлении контактов");
 		} finally {
 			setIsSubmitting(false);
 		}

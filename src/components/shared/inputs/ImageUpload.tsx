@@ -3,7 +3,7 @@
 import { useDropzone } from "react-dropzone";
 import { Upload, X } from "lucide-react";
 import Image from "next/image";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { cn } from "@/src/lib/utils";
 
 interface Props {
@@ -40,6 +40,10 @@ const ImageUpload: React.FC<Props> = ({ value, onChange, error, className }) => 
 
 	const previewUrl = value instanceof File ? URL.createObjectURL(value) : value;
 
+	useEffect(() => {
+		console.log(`${process.env.NEXT_PUBLIC_IMAGE_URL}${previewUrl}`);
+	}, [previewUrl]);
+
 	return (
 		<div className={cn("w-full", className)}>
 			<div
@@ -55,7 +59,17 @@ const ImageUpload: React.FC<Props> = ({ value, onChange, error, className }) => 
 
 				{previewUrl ? (
 					<div className="relative w-full h-[200px]">
-						<Image src={previewUrl} alt="Preview" fill className="object-cover" />
+						<Image
+							src={
+								previewUrl?.startsWith("http") || previewUrl?.startsWith("blob:")
+									? previewUrl
+									: `${process.env.NEXT_PUBLIC_IMAGE_URL}${previewUrl}`
+							}
+							alt="Preview"
+							fill
+							className="object-cover rounded-xl"
+							unoptimized
+						/>
 						<button
 							onClick={removeImage}
 							className="absolute top-2 right-2 p-1.5 bg-white/80 rounded-full hover:bg-white text-gray-700 transition-colors shadow-sm"

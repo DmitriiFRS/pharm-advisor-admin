@@ -2,16 +2,25 @@
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { newsSchema, NewsFormData } from "@/src/service/form/schemas/news.schema";
+import { newsSchema, NewsFormData, NewsDetail } from "@/src/service/form/schemas/news.schema";
 import ImageUpload from "@/src/components/shared/inputs/ImageUpload";
+import PdfUpload from "@/src/components/shared/inputs/PdfUpload";
 import RichTextInput from "@/src/components/shared/inputs/RichTextInput";
+import CommonInput from "@/src/components/shared/inputs/CommonInput";
 import SingleDateSelect from "@/src/components/shared/inputs/SingleDateSelect";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { getLocalizedContent } from "@/src/helpers/getLocalizedContent";
 
-const NewsCreateForm = () => {
+interface Props {
+	initialData?: NewsDetail;
+}
+
+const NewsCreateForm: React.FC<Props> = ({ initialData }) => {
 	const [isLoading, setIsLoading] = useState(false);
+	const router = useRouter();
 
 	const {
 		register,
@@ -24,11 +33,13 @@ const NewsCreateForm = () => {
 	} = useForm<NewsFormData>({
 		resolver: zodResolver(newsSchema),
 		defaultValues: {
-			titleRu: "",
-			titleUz: "",
-			descriptionRu: "",
-			descriptionUz: "",
-			publishedAt: "",
+			titleRu: getLocalizedContent(initialData?.translations, "ru", "title"),
+			titleUz: getLocalizedContent(initialData?.translations, "uz", "title"),
+			descriptionRu: getLocalizedContent(initialData?.translations, "ru", "content"),
+			descriptionUz: getLocalizedContent(initialData?.translations, "uz", "content"),
+			publishedAt: initialData?.publishedAt ? new Date(initialData.publishedAt).toISOString() : "",
+			image: initialData?.media?.url || null,
+			pdf: initialData?.pdf || null,
 		},
 	});
 
@@ -47,20 +58,43 @@ const NewsCreateForm = () => {
 				formData.append("image", data.image);
 			}
 
-			const response = await fetch("/api/post/news", {
-				method: "POST",
+			// Если загружаем новый файл (замена) или удалили картинку (null) и была старая картинка -> отправляем imageId для удаления старой
+			if ((data.image instanceof File || data.image === null) && initialData?.media?.id) {
+				formData.append("imageId", String(initialData.media.id));
+			}
+
+			if (data.pdf instanceof File) {
+				formData.append("pdf", data.pdf);
+			}
+
+			// Аналогично для PDF
+			if ((data.pdf instanceof File || data.pdf === null) && initialData?.pdf?.id) {
+				formData.append("pdfId", String(initialData.pdf.id));
+			}
+
+			const url = initialData?.id ? `/api/patch/news/${initialData.id}` : "/api/post/news";
+			const method = initialData?.id ? "PATCH" : "POST";
+			console.log(formData);
+			const response = await fetch(url, {
+				method,
 				body: formData,
 			});
 
 			if (!response.ok) {
 				const errorData = await response.json();
-				throw new Error(errorData.error || "Ошибка при создании новости");
+				throw new Error(errorData.error || "Ошибка при сохранении новости");
 			}
 
-			toast.success("Новость успешно создана");
-			reset();
+			toast.success(initialData?.id ? "Новость успешно обновлена" : "Новость успешно создана");
+
+			if (!initialData?.id) {
+				reset();
+			} else {
+				router.push("/news");
+				router.refresh();
+			}
 		} catch (error: unknown) {
-			toast.error((error as Error).message || "Ошибка при создании новости");
+			toast.error((error as Error).message || "Ошибка при сохранении новости");
 		} finally {
 			setIsLoading(false);
 		}
@@ -80,35 +114,21 @@ const NewsCreateForm = () => {
 						/>
 
 						<div className="space-y-4">
-							<div>
-								<label className="text-14 font-medium text-black-primary mb-2 block">Заголовок (RU)</label>
-								<input
-									{...register("titleRu")}
-									placeholder="Введите заголовок"
-									className={`w-full border rounded-xl px-4 py-3 text-14 outline-none transition-colors 
-                                        ${
-															errors.titleRu
-																? "border-red-500 focus:border-red-500"
-																: "border-gray-200 focus:border-e94190 hover:border-gray-300"
-														}`}
-								/>
-								{errors.titleRu && <p className="text-12 text-red-500 mt-1">{errors.titleRu.message}</p>}
-							</div>
+							<CommonInput
+								register={register}
+								error={errors.titleRu}
+								title="Заголовок (RU)"
+								name="titleRu"
+								placeholder="Введите заголовок"
+							/>
 
-							<div>
-								<label className="text-14 font-medium text-black-primary mb-2 block">Заголовок (UZ)</label>
-								<input
-									{...register("titleUz")}
-									placeholder="Sarlavhani kiriting"
-									className={`w-full border rounded-xl px-4 py-3 text-14 outline-none transition-colors 
-                                        ${
-															errors.titleUz
-																? "border-red-500 focus:border-red-500"
-																: "border-gray-200 focus:border-e94190 hover:border-gray-300"
-														}`}
-								/>
-								{errors.titleUz && <p className="text-12 text-red-500 mt-1">{errors.titleUz.message}</p>}
-							</div>
+							<CommonInput
+								register={register}
+								error={errors.titleUz}
+								title="Заголовок (UZ)"
+								name="titleUz"
+								placeholder="Sarlavhani kiriting"
+							/>
 
 							<SingleDateSelect
 								name="publishedAt"
@@ -148,6 +168,14 @@ const NewsCreateForm = () => {
 								/>
 							)}
 						/>
+
+						<Controller
+							name="pdf"
+							control={control}
+							render={({ field }) => (
+								<PdfUpload value={field.value} onChange={field.onChange} error={errors.pdf?.message as string} className="h-full" />
+							)}
+						/>
 					</div>
 				</div>
 
@@ -158,7 +186,7 @@ const NewsCreateForm = () => {
 						className="bg-primary-gradient text-white px-8 py-3 rounded-xl font-medium shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
 					>
 						{isLoading && <Loader2 className="animate-spin w-4 h-4" />}
-						Создать новость
+						{initialData ? "Сохранить изменения" : "Создать новость"}
 					</button>
 				</div>
 			</form>

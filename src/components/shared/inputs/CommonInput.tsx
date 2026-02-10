@@ -1,6 +1,6 @@
-import { UseFormRegister, Path } from "react-hook-form";
+import { UseFormRegister, Path, FieldValues } from "react-hook-form";
 
-interface Props<T extends Record<string, string | number | null>> {
+interface Props<T extends FieldValues> {
 	register: UseFormRegister<T>;
 	error?: { message?: string };
 	title: string;
@@ -11,9 +11,11 @@ interface Props<T extends Record<string, string | number | null>> {
 	titleClassName?: string;
 	inputClassName?: string;
 	type?: string;
+	Icon?: React.ReactNode;
+	isTextarea?: boolean;
 }
 
-const CommonInput = <T extends Record<string, string | number | null>>({
+const CommonInput = <T extends FieldValues>({
 	register,
 	error,
 	title,

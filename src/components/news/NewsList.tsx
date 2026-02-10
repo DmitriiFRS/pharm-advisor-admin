@@ -1,6 +1,9 @@
 "use client";
 
+import { toast } from "react-toastify";
+
 import CommonList from "@/src/components/shared/list/CommonList";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export interface INews {
@@ -23,6 +26,30 @@ interface Props {
 
 const NewsList: React.FC<Props> = ({ data, page, totalPages }) => {
 	const [isLoading, setIsLoading] = useState(false);
+	const router = useRouter();
+
+	const handleDelete = async (id: number) => {
+		if (window.confirm("Вы уверены что хотите удалить?")) {
+			try {
+				setIsLoading(true);
+				const res = await fetch(`/api/delete/news/${id}`, {
+					method: "DELETE",
+				});
+
+				if (!res.ok) {
+					throw new Error("Ошибка при удалении");
+				}
+
+				toast.success("Новость успешно удалена");
+				router.refresh();
+			} catch (error) {
+				console.error(error);
+				toast.error("Не удалось удалить новость");
+			} finally {
+				setIsLoading(false);
+			}
+		}
+	};
 
 	return (
 		<div className="p-8 max-w-[1600px] mx-auto">
@@ -58,8 +85,8 @@ const NewsList: React.FC<Props> = ({ data, page, totalPages }) => {
 					},
 				]}
 				isLoading={isLoading}
-				onEdit={(item) => console.log("Edit", item)}
-				onDelete={(item) => console.log("Delete", item)}
+				onEdit={(item) => router.push(`/news/update/${item.id}`)}
+				onDelete={(item) => handleDelete(item.id)}
 				pagination={{
 					page,
 					totalPages,
