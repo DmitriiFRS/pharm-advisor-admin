@@ -7,4 +7,8 @@ export const ENDPOINTS = {
 
 	GET_CONTACTS: "contacts",
 	PATCH_CONTACTS: "contacts/update",
+
+	GET_USER_REGISTRATIONS: "users/registration-stats",
+	GET_USER_LOGINS: "auth/login-stats",
+	GET_ACTIVITY: "users/dashboard-activity",
 };

@@ -1,3 +1,5 @@
+import { ILatestLogin } from "@/src/types/dashboard.type";
+
 const mockLogins = [
 	{ id: 1, name: "Иван Иванов", email: "ivan@example.com", time: "10:45" },
 	{ id: 2, name: "Мария Козлова", email: "maria@example.com", time: "10:30" },
@@ -6,7 +8,7 @@ const mockLogins = [
 	{ id: 5, name: "Дмитрий Смирнов", email: "dmitry@example.com", time: "09:45" },
 ];
 
-const LastLogins = () => {
+const LastLogins = ({ data }: { data: ILatestLogin[] }) => {
 	return (
 		<div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
 			<h2 className="text-18 font-bold mb-6 text-black-primary">Последние входы</h2>
@@ -20,11 +22,11 @@ const LastLogins = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{mockLogins.map((login) => (
+						{data.map((login) => (
 							<tr key={login.id} className="border-b border-gray-50 last:border-none hover:bg-gray-50 transition-colors">
 								<td className="py-3 px-4 text-14 text-black-primary font-medium">{login.name}</td>
 								<td className="py-3 px-4 text-14 text-gray-600">{login.email}</td>
-								<td className="py-3 px-4 text-14 text-gray-600">{login.time}</td>
+								<td className="py-3 px-4 text-14 text-gray-600">{login.createdAt}</td>
 							</tr>
 						))}
 					</tbody>
