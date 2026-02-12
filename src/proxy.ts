@@ -25,6 +25,9 @@ export async function proxy(request: NextRequest) {
 	const isAccessTokenValid = await verifyAccessToken(accessToken);
 
 	if (isAccessTokenValid) {
+		if (isPublic) {
+			return NextResponse.redirect(new URL("/", request.url));
+		}
 		return NextResponse.next();
 	}
 
@@ -32,8 +35,8 @@ export async function proxy(request: NextRequest) {
 	const newTokens = await refreshTokens(accessToken, refreshToken);
 
 	if (newTokens) {
-		// Создаем ответ для продолжения цепочки
-		const response = NextResponse.next();
+		// Создаем ответ для продолжения цепочки или редиректа если мы на публичном роуте
+		const response = isPublic ? NextResponse.redirect(new URL("/", request.url)) : NextResponse.next();
 
 		// Устанавливаем новые куки в ответ для браузера
 		response.cookies.set("accessToken", newTokens.accessToken);

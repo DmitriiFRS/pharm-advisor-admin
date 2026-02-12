@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useContext } from "react";
-import { ChevronDown, ChevronUp, HelpCircle, GraduationCap, Phone, Newspaper, User, LogOut } from "lucide-react";
+import { ChevronDown, ChevronUp, HelpCircle, GraduationCap, Phone, Newspaper, User, LogOut, Home } from "lucide-react";
 import logo from "@/public/logo.webp";
 import { UserData } from "@/src/context/UserContext";
 
@@ -16,6 +16,11 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
+	{
+		title: "Главная",
+		icon: Home,
+		href: "/",
+	},
 	{
 		title: "Новости",
 		icon: Newspaper,

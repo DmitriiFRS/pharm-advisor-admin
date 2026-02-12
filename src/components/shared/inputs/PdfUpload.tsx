@@ -85,7 +85,7 @@ const PdfUpload: React.FC<Props> = ({ value, onChange, error, className }) => {
 						</div>
 						<div>
 							<p className="text-14 font-medium text-black-primary">{isDragActive ? "Отпустите файл" : "Загрузить PDF"}</p>
-							<p className="text-12 text-gray-400 mt-1">до 10MB</p>
+							<p className="text-12 text-gray-400 mt-1">до 200MB</p>
 						</div>
 					</div>
 				)}
