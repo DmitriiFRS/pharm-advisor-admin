@@ -1,13 +1,5 @@
 import { ILatestLogin } from "@/src/types/dashboard.type";
 
-const mockLogins = [
-	{ id: 1, name: "Иван Иванов", email: "ivan@example.com", time: "10:45" },
-	{ id: 2, name: "Мария Козлова", email: "maria@example.com", time: "10:30" },
-	{ id: 3, name: "Сергей Петров", email: "sergey@example.com", time: "10:15" },
-	{ id: 4, name: "Анна Сидорова", email: "anna@example.com", time: "09:50" },
-	{ id: 5, name: "Дмитрий Смирнов", email: "dmitry@example.com", time: "09:45" },
-];
-
 const LastLogins = ({ data }: { data: ILatestLogin[] }) => {
 	return (
 		<div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
