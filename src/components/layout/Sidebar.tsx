@@ -29,22 +29,22 @@ const menuItems: MenuItem[] = [
 			{ title: "Новая новость", href: "/news/create" },
 		],
 	},
-	{
-		title: "FAQ",
-		icon: HelpCircle,
-		submenu: [
-			{ title: "Все FAQ", href: "/faq" },
-			{ title: "Новый вопрос-ответ", href: "/faq/create" },
-		],
-	},
-	{
-		title: "Карточки обучения",
-		icon: GraduationCap,
-		submenu: [
-			{ title: "Все карточки", href: "/education" },
-			{ title: "Новая карточка", href: "/education/create" },
-		],
-	},
+	// {
+	// 	title: "FAQ",
+	// 	icon: HelpCircle,
+	// 	submenu: [
+	// 		{ title: "Все FAQ", href: "/faq" },
+	// 		{ title: "Новый вопрос-ответ", href: "/faq/create" },
+	// 	],
+	// },
+	// {
+	// 	title: "Карточки обучения",
+	// 	icon: GraduationCap,
+	// 	submenu: [
+	// 		{ title: "Все карточки", href: "/education" },
+	// 		{ title: "Новая карточка", href: "/education/create" },
+	// 	],
+	// },
 	{
 		title: "Контакты",
 		icon: Phone,
