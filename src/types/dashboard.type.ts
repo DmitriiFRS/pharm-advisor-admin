@@ -38,7 +38,11 @@ export interface ILatestRegistration {
 
 export interface ILatestLogin {
 	id: number;
-	email: string;
-	name: string;
+	userId: number;
 	createdAt: string;
+	user: {
+		id: number;
+		email: string;
+		name: string;
+	};
 }

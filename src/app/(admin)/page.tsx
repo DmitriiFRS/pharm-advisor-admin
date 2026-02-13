@@ -28,6 +28,8 @@ export default async function Home() {
 		path: "",
 	});
 
+	console.log("loginResponse", loginResponse.data);
+
 	return (
 		<div className="p-8 flex flex-col gap-8 max-w-[1600px] mx-auto">
 			<h1 className="text-24 font-bold text-black-primary">Дашборд</h1>

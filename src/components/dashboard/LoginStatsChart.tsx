@@ -17,7 +17,7 @@ const LoginStatsChart = ({ data }: { data: ILoginGraph[] }) => {
 							cursor={{ fill: "#f3f4f6" }}
 							contentStyle={{ borderRadius: "8px", border: "none", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }}
 						/>
-						<Bar dataKey="users" fill="#2563eb" radius={[4, 4, 0, 0]} barSize={30} />
+						<Bar dataKey="logins" fill="#2563eb" radius={[4, 4, 0, 0]} barSize={30} />
 					</BarChart>
 				</ResponsiveContainer>
 			</div>

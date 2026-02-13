@@ -16,9 +16,9 @@ const LastLogins = ({ data }: { data: ILatestLogin[] }) => {
 					<tbody>
 						{data.map((login) => (
 							<tr key={login.id} className="border-b border-gray-50 last:border-none hover:bg-gray-50 transition-colors">
-								<td className="py-3 px-4 text-14 text-black-primary font-medium">{login.name}</td>
-								<td className="py-3 px-4 text-14 text-gray-600">{login.email}</td>
-								<td className="py-3 px-4 text-14 text-gray-600">{login.createdAt}</td>
+								<td className="py-3 px-4 text-14 text-black-primary font-medium">{login.user.name}</td>
+								<td className="py-3 px-4 text-14 text-gray-600">{login.user.email}</td>
+								<td className="py-3 px-4 text-14 text-gray-600">{new Date(login.createdAt).toLocaleString("ru-RU")}</td>
 							</tr>
 						))}
 					</tbody>
