@@ -11,4 +11,5 @@ export const ENDPOINTS = {
 	GET_USER_REGISTRATIONS: "users/registration-stats",
 	GET_USER_LOGINS: "auth/login-stats",
 	GET_ACTIVITY: "users/dashboard-activity",
+	GET_USERS: "users/list",
 };

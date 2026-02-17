@@ -1,15 +1,15 @@
-import NewsList from "@/src/components/news/NewsList";
-import { INews } from "@/src/types/news.type";
+import UsersList from "@/src/components/users/UsersList";
 import { ENDPOINTS } from "@/src/consts/endpoints";
 import { apiServerService } from "@/src/service/api/api.server";
+import { IUserData } from "@/src/types/user.type";
 import { cookies } from "next/headers";
 
 interface Props {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-interface NewsResponse {
-	data: INews[];
+interface UsersResponse {
+	data: IUserData[];
 	meta: {
 		total: number;
 		page: number;
@@ -18,30 +18,31 @@ interface NewsResponse {
 	};
 }
 
-const NewsPage = async (props: Props) => {
+const UsersPage = async (props: Props) => {
 	const searchParams = await props.searchParams;
 	const page = Number(searchParams.page) || 1;
+	const sort = searchParams.sort as string;
 
 	const cookieStore = await cookies();
 	const accessToken = cookieStore.get("accessToken")?.value;
 	const api = apiServerService(accessToken);
 
-	const res = await api.get<NewsResponse>({
-		endpoint: ENDPOINTS.GET_NEWS,
+	const res = await api.get<UsersResponse>({
+		endpoint: ENDPOINTS.GET_USERS,
 		queryParams: {
 			page,
 			limit: 10,
+			...(sort && { sort }),
 		},
 		path: "",
 	});
 
-	console.log(res);
-
 	if (!res.data) {
-		return <div>No news found</div>;
+		return <div className="p-8">No users found</div>;
 	}
-
-	return <NewsList data={res.data} page={res.meta.page} totalPages={res.meta.totalPages} />;
+	console.log(res.data);
+	// return null;
+	return <UsersList data={res.data} page={res.meta.page} totalPages={res.meta.totalPages} />;
 };
 
-export default NewsPage;
+export default UsersPage;

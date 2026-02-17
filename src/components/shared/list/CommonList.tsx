@@ -4,7 +4,7 @@ import { Edit, Trash2 } from "lucide-react";
 import React from "react";
 import PagesPagination from "../pagination/Pagination";
 
-interface Column<T> {
+export interface Column<T> {
 	header: string;
 	accessorKey?: keyof T;
 	cell?: (row: T) => React.ReactNode;

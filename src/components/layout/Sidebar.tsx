@@ -29,6 +29,14 @@ const menuItems: MenuItem[] = [
 			{ title: "Новая новость", href: "/news/create" },
 		],
 	},
+	{
+		title: "Пользователи",
+		icon: User,
+		submenu: [
+			{ title: "Все пользователи", href: "/users" },
+			// { title: "Новый пользователь", href: "/users/create" },
+		],
+	},
 	// {
 	// 	title: "FAQ",
 	// 	icon: HelpCircle,
