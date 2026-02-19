@@ -29,6 +29,7 @@ export interface ILatestRegistration {
 	id: number;
 	email: string;
 	name: string;
+	phoneNumber: string;
 	createdAt: string;
 	role: {
 		id: number;

@@ -83,7 +83,7 @@ async function verifyAccessToken(accessToken: string) {
 		}
 		return response.ok ? "OK" : "INVALID";
 	} catch {
-		return false;
+		return "INVALID";
 	}
 }
 
