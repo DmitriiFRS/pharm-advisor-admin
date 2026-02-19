@@ -40,8 +40,6 @@ const UsersPage = async (props: Props) => {
 	if (!res.data) {
 		return <div className="p-8">No users found</div>;
 	}
-	console.log(res.data);
-	// return null;
 	return <UsersList data={res.data} page={res.meta.page} totalPages={res.meta.totalPages} />;
 };
 

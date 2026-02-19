@@ -14,4 +14,8 @@ export const usersColumns: Column<IUserData>[] = [
 		header: "Email",
 		accessorKey: "email",
 	},
+	{
+		header: "Телефон",
+		accessorKey: "phoneNumber",
+	},
 ];

@@ -37,8 +37,8 @@ export default async function Home() {
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 				<RegistrationChart data={regsResponse.data} />
 				<LoginStatsChart data={loginResponse.data} />
-				<LastRegistrations data={activityResponse.data.latestRegistrations} />
-				<LastLogins data={activityResponse.data.latestLogins} />
+				{activityResponse.data && <LastRegistrations data={activityResponse.data?.latestRegistrations} />}
+				{activityResponse.data && <LastLogins data={activityResponse.data?.latestLogins} />}
 			</div>
 		</div>
 	);

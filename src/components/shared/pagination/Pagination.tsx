@@ -28,7 +28,7 @@ const PagesPagination: React.FC<Props> = ({ page, totalPages, hasPreviousPage, h
 	const setPage = (newPage: number) => {
 		setLoading(true);
 		const newParams = new URLSearchParams(params.toString());
-		newParams.set("pageNumber", newPage.toString());
+		newParams.set("page", newPage.toString());
 		router.push(`${pathname}?${newParams.toString()}`);
 		if (withFalseSetLoading) {
 			setLoading(false);

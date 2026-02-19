@@ -24,7 +24,10 @@ export async function proxy(request: NextRequest) {
 	// 3. Проверка валидности Access токена
 	const isAccessTokenValid = await verifyAccessToken(accessToken);
 
-	if (isAccessTokenValid) {
+	if (isAccessTokenValid === "FORBIDDEN") {
+		return redirectToLogout(request);
+	}
+	if (isAccessTokenValid === "OK") {
 		if (isPublic) {
 			return NextResponse.redirect(new URL("/", request.url));
 		}
@@ -67,7 +70,7 @@ function redirectToLogout(request: NextRequest) {
 
 async function verifyAccessToken(accessToken: string) {
 	try {
-		const response = await fetch(`${AUTH_API_URL}/users/get-me`, {
+		const response = await fetch(`${AUTH_API_URL}/users/get-me-admin`, {
 			method: "GET",
 			headers: {
 				Authorization: `Bearer ${accessToken}`,
@@ -75,7 +78,10 @@ async function verifyAccessToken(accessToken: string) {
 			},
 			cache: "no-store",
 		});
-		return response.ok;
+		if (response.status === 403) {
+			return "FORBIDDEN";
+		}
+		return response.ok ? "OK" : "INVALID";
 	} catch {
 		return false;
 	}

@@ -27,7 +27,7 @@ const CreateOrUpdateNews: React.FC<Props> = async ({ params }) => {
 		if (!data?.data) return notFound();
 		console.log(data.data);
 		return (
-			<NewsWrapper title="Редактирование новости">
+			<NewsWrapper title="Редактирование статьи">
 				<NewsCreateForm initialData={data.data} />
 			</NewsWrapper>
 		);

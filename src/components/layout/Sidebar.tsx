@@ -22,11 +22,11 @@ const menuItems: MenuItem[] = [
 		href: "/",
 	},
 	{
-		title: "Новости",
+		title: "Статьи",
 		icon: Newspaper,
 		submenu: [
-			{ title: "Все новости", href: "/news" },
-			{ title: "Новая новость", href: "/news/create" },
+			{ title: "Все статьи", href: "/articles" },
+			{ title: "Новая статья", href: "/articles/create" },
 		],
 	},
 	{
