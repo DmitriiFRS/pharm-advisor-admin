@@ -1,10 +1,9 @@
 "use client";
 
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { faqSchema, FaqFormData, FaqDetail } from "@/src/service/form/schemas/faq.schema";
 import CommonInput from "@/src/components/shared/inputs/CommonInput";
-import RichTextInput from "@/src/components/shared/inputs/RichTextInput";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -22,7 +21,6 @@ const FaqCreateForm: React.FC<Props> = ({ initialData }) => {
 	const {
 		register,
 		handleSubmit,
-		control,
 		formState: { errors },
 	} = useForm<FaqFormData>({
 		resolver: zodResolver(faqSchema),
@@ -84,16 +82,14 @@ const FaqCreateForm: React.FC<Props> = ({ initialData }) => {
 							name="questionRu"
 							placeholder="Введите вопрос на русском"
 						/>
-
-						<Controller
+						<CommonInput
+							register={register}
+							error={errors.answerRu}
+							title="Ответ (RU)"
 							name="answerRu"
-							control={control}
-							render={({ field }) => (
-								<RichTextInput label="Ответ (RU)" value={field.value} onChange={field.onChange} error={errors.answerRu?.message} />
-							)}
+							placeholder="Введите ответ на русском"
 						/>
 					</div>
-
 					<div className="space-y-6">
 						<CommonInput
 							register={register}
@@ -103,12 +99,12 @@ const FaqCreateForm: React.FC<Props> = ({ initialData }) => {
 							placeholder="Savolni kiriting"
 						/>
 
-						<Controller
+						<CommonInput
+							register={register}
+							error={errors.answerUz}
+							title="Ответ (UZ)"
 							name="answerUz"
-							control={control}
-							render={({ field }) => (
-								<RichTextInput label="Ответ (UZ)" value={field.value} onChange={field.onChange} error={errors.answerUz?.message} />
-							)}
+							placeholder="Savolni kiriting"
 						/>
 					</div>
 				</div>
