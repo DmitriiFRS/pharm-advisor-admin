@@ -1,7 +1,7 @@
 import { Column } from "@/src/components/shared/list/CommonList";
 import { INews } from "@/src/types/news.type";
 
-export const newsColumns: Column<INews>[] = [
+export const articleColumns: Column<INews>[] = [
 	{ header: "Заголовок", accessorKey: "title" },
 	{
 		header: "Контент",

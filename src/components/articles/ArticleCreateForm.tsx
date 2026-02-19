@@ -18,7 +18,7 @@ interface Props {
 	initialData?: NewsDetail;
 }
 
-const NewsCreateForm: React.FC<Props> = ({ initialData }) => {
+const ArticleCreateForm: React.FC<Props> = ({ initialData }) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
 
@@ -74,7 +74,6 @@ const NewsCreateForm: React.FC<Props> = ({ initialData }) => {
 
 			const url = initialData?.id ? `/api/patch/news/${initialData.id}` : "/api/post/news";
 			const method = initialData?.id ? "PATCH" : "POST";
-			console.log(formData);
 			const response = await fetch(url, {
 				method,
 				body: formData,
@@ -194,4 +193,4 @@ const NewsCreateForm: React.FC<Props> = ({ initialData }) => {
 	);
 };
 
-export default NewsCreateForm;
+export default ArticleCreateForm;

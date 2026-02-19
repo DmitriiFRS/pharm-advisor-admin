@@ -1,20 +1,19 @@
 "use client";
 
 import { toast } from "react-toastify";
-
 import CommonList from "@/src/components/shared/list/CommonList";
-import { INews } from "@/src/types/news.type";
+import { IFaq } from "@/src/types/faq.type";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { newsColumns } from "./NewsColumns";
+import { faqColumns } from "./FaqColumns";
 
 interface Props {
-	data: INews[];
+	data: IFaq[];
 	page: number;
 	totalPages: number;
 }
 
-const NewsList: React.FC<Props> = ({ data, page, totalPages }) => {
+const FaqList: React.FC<Props> = ({ data, page, totalPages }) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
 
@@ -22,7 +21,7 @@ const NewsList: React.FC<Props> = ({ data, page, totalPages }) => {
 		if (window.confirm("Вы уверены что хотите удалить?")) {
 			try {
 				setIsLoading(true);
-				const res = await fetch(`/api/delete/news/${id}`, {
+				const res = await fetch(`/api/delete/faqs/${id}`, {
 					method: "DELETE",
 				});
 
@@ -30,11 +29,11 @@ const NewsList: React.FC<Props> = ({ data, page, totalPages }) => {
 					throw new Error("Ошибка при удалении");
 				}
 
-				toast.success("Новость успешно удалена");
+				toast.success("FAQ успешно удален");
 				router.refresh();
 			} catch (error) {
 				console.error(error);
-				toast.error("Не удалось удалить новость");
+				toast.error("Не удалось удалить FAQ");
 			} finally {
 				setIsLoading(false);
 			}
@@ -44,14 +43,14 @@ const NewsList: React.FC<Props> = ({ data, page, totalPages }) => {
 	return (
 		<div className="p-8 max-w-[1600px] mx-auto">
 			<div className="flex items-center justify-between mb-6">
-				<h1 className="text-24 font-bold text-black-primary">Все новости</h1>
+				<h1 className="text-24 font-bold text-black-primary">FAQ</h1>
 			</div>
 
 			<CommonList
 				data={data}
-				columns={newsColumns}
+				columns={faqColumns}
 				isLoading={isLoading}
-				onEdit={(item) => router.push(`/articles/update/${item.id}`)}
+				onEdit={(item) => router.push(`/faq/update/${item.id}`)}
 				onDelete={(item) => handleDelete(item.id)}
 				pagination={{
 					page,
@@ -66,4 +65,4 @@ const NewsList: React.FC<Props> = ({ data, page, totalPages }) => {
 	);
 };
 
-export default NewsList;
+export default FaqList;

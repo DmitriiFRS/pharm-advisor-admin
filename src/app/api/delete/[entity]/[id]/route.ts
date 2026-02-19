@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 
 const ENDPOINT_MAP = {
 	news: ENDPOINTS.DELETE_NEWS,
+	faqs: ENDPOINTS.DELETE_FAQS,
 } as const;
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ entity: string; id: string }> }) {

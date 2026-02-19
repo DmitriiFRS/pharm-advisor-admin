@@ -12,4 +12,10 @@ export const ENDPOINTS = {
 	GET_USER_LOGINS: "auth/login-stats",
 	GET_ACTIVITY: "users/dashboard-activity",
 	GET_USERS: "users/list",
+
+	GET_FAQS: "faqs/admin",
+	GET_FAQS_BY_ID: "faqs/getById",
+	POST_FAQS: "faqs/create",
+	PATCH_FAQS: "faqs/update",
+	DELETE_FAQS: "faqs/delete",
 };

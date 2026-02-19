@@ -1,15 +1,15 @@
-import { INews } from "@/src/types/news.type";
+import { IFaq } from "@/src/types/faq.type";
 import { ENDPOINTS } from "@/src/consts/endpoints";
 import { apiServerService } from "@/src/service/api/api.server";
 import { cookies } from "next/headers";
-import ArticleList from "@/src/components/articles/ArticleList";
+import FaqList from "@/src/components/faq/FaqList";
 
 interface Props {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-interface NewsResponse {
-	data: INews[];
+interface FaqResponse {
+	data: IFaq[];
 	meta: {
 		total: number;
 		page: number;
@@ -18,7 +18,7 @@ interface NewsResponse {
 	};
 }
 
-const NewsPage = async (props: Props) => {
+const FaqPage = async (props: Props) => {
 	const searchParams = await props.searchParams;
 	const page = Number(searchParams.page) || 1;
 
@@ -26,8 +26,8 @@ const NewsPage = async (props: Props) => {
 	const accessToken = cookieStore.get("accessToken")?.value;
 	const api = apiServerService(accessToken);
 
-	const res = await api.get<NewsResponse>({
-		endpoint: ENDPOINTS.GET_NEWS,
+	const res = await api.get<FaqResponse>({
+		endpoint: ENDPOINTS.GET_FAQS,
 		queryParams: {
 			page,
 			limit: 10,
@@ -36,10 +36,10 @@ const NewsPage = async (props: Props) => {
 	});
 
 	if (!res.data) {
-		return <div>No news found</div>;
+		return <div>No FAQs found</div>;
 	}
 
-	return <ArticleList data={res.data} page={res.meta.page} totalPages={res.meta.totalPages} />;
+	return <FaqList data={res.data} page={res.meta.page} totalPages={res.meta.totalPages} />;
 };
 
-export default NewsPage;
+export default FaqPage;

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useContext } from "react";
-import { ChevronDown, ChevronUp, HelpCircle, GraduationCap, Phone, Newspaper, User, LogOut, Home } from "lucide-react";
+import { ChevronDown, ChevronUp, HelpCircle, Phone, Newspaper, User, LogOut, Home } from "lucide-react";
 import logo from "@/public/logo.webp";
 import { UserData } from "@/src/context/UserContext";
 
@@ -37,14 +37,14 @@ const menuItems: MenuItem[] = [
 			// { title: "Новый пользователь", href: "/users/create" },
 		],
 	},
-	// {
-	// 	title: "FAQ",
-	// 	icon: HelpCircle,
-	// 	submenu: [
-	// 		{ title: "Все FAQ", href: "/faq" },
-	// 		{ title: "Новый вопрос-ответ", href: "/faq/create" },
-	// 	],
-	// },
+	{
+		title: "Вопрос-ответ",
+		icon: HelpCircle,
+		submenu: [
+			{ title: "Все вопросы-ответы", href: "/faq" },
+			{ title: "Новый вопрос-ответ", href: "/faq/create" },
+		],
+	},
 	// {
 	// 	title: "Карточки обучения",
 	// 	icon: GraduationCap,

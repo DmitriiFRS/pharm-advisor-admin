@@ -1,10 +1,10 @@
-import NewsCreateForm from "@/src/components/news/NewsCreateForm";
-import NewsWrapper from "@/src/components/news/NewsWrapper";
+import ArticleCreateForm from "@/src/components/articles/ArticleCreateForm";
+import ArticleWrapper from "@/src/components/articles/ArticleWrapper";
 
 export default function CreateNewsPage() {
 	return (
-		<NewsWrapper title="Создание статьи">
-			<NewsCreateForm />
-		</NewsWrapper>
+		<ArticleWrapper title="Создание статьи">
+			<ArticleCreateForm />
+		</ArticleWrapper>
 	);
 }
