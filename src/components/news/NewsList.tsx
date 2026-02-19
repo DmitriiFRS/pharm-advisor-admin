@@ -51,7 +51,7 @@ const NewsList: React.FC<Props> = ({ data, page, totalPages }) => {
 				data={data}
 				columns={newsColumns}
 				isLoading={isLoading}
-				onEdit={(item) => router.push(`/news/update/${item.id}`)}
+				onEdit={(item) => router.push(`/articles/update/${item.id}`)}
 				onDelete={(item) => handleDelete(item.id)}
 				pagination={{
 					page,

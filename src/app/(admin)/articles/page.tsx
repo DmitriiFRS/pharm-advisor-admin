@@ -35,8 +35,6 @@ const NewsPage = async (props: Props) => {
 		path: "",
 	});
 
-	console.log(res);
-
 	if (!res.data) {
 		return <div>No news found</div>;
 	}
