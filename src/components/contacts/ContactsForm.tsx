@@ -8,8 +8,11 @@ import { contactsSchema, ContactsFormData } from "@/src/service/form/schemas/con
 import { Loader2, Phone, Mail, MapPin, Send, Instagram, Map } from "lucide-react";
 import { useState } from "react";
 
+import { getLocalizedContent } from "@/src/helpers/getLocalizedContent";
+import { IContact } from "@/src/types/contacts.type";
+
 interface Props {
-	initialData?: ContactsFormData;
+	initialData?: IContact["data"];
 }
 
 const ContactsForm: React.FC<Props> = ({ initialData }) => {
@@ -21,14 +24,25 @@ const ContactsForm: React.FC<Props> = ({ initialData }) => {
 		formState: { errors },
 	} = useForm<ContactsFormData>({
 		resolver: zodResolver(contactsSchema),
-		defaultValues: initialData || {
-			phone: "",
-			email: "",
-			telegramLink: "",
-			address: "",
-			instagramLink: "",
-			googleMapsLink: "",
-		},
+		defaultValues: initialData
+			? {
+					phone: initialData.phone,
+					email: initialData.email,
+					telegramLink: initialData.telegramLink || "",
+					addressRu: getLocalizedContent(initialData.translations, "ru", "address"),
+					addressUz: getLocalizedContent(initialData.translations, "uz", "address"),
+					instagramLink: initialData.instagramLink || "",
+					googleMapsLink: initialData.googleMapsLink || "",
+			  }
+			: {
+					phone: "",
+					email: "",
+					telegramLink: "",
+					addressRu: "",
+					addressUz: "",
+					instagramLink: "",
+					googleMapsLink: "",
+			  },
 	});
 
 	const onSubmit = async (data: ContactsFormData) => {
@@ -80,22 +94,40 @@ const ContactsForm: React.FC<Props> = ({ initialData }) => {
 						{errors.email && <p className="text-12 text-red-500 mt-1">{errors.email.message}</p>}
 					</div>
 
-					<div className="md:col-span-2">
-						<label className="text-14 font-medium text-black-primary mb-2 block">Адрес</label>
+					<div className="md:col-span-1">
+						<label className="text-14 font-medium text-black-primary mb-2 block">Адрес (RU)</label>
 						<div className="relative">
 							<MapPin className="absolute left-3 top-3 text-gray-400 w-4 h-4" />
 							<textarea
-								{...register("address")}
+								{...register("addressRu")}
 								placeholder="г. Ташкент, ул. Амира Темура, 1"
 								rows={3}
 								className={`w-full border rounded-xl px-4 py-3 text-14 outline-none transition-colors pl-10 resize-none ${
-									errors.address
+									errors.addressRu
 										? "border-red-500 focus:border-red-500"
 										: "border-gray-200 focus:border-e94190 hover:border-gray-300"
 								}`}
 							/>
 						</div>
-						{errors.address && <p className="text-12 text-red-500 mt-1">{errors.address.message}</p>}
+						{errors.addressRu && <p className="text-12 text-red-500 mt-1">{errors.addressRu.message}</p>}
+					</div>
+
+					<div className="md:col-span-1">
+						<label className="text-14 font-medium text-black-primary mb-2 block">Адрес (UZ)</label>
+						<div className="relative">
+							<MapPin className="absolute left-3 top-3 text-gray-400 w-4 h-4" />
+							<textarea
+								{...register("addressUz")}
+								placeholder="Toshkent sh., Amir Temur ko'chasi, 1"
+								rows={3}
+								className={`w-full border rounded-xl px-4 py-3 text-14 outline-none transition-colors pl-10 resize-none ${
+									errors.addressUz
+										? "border-red-500 focus:border-red-500"
+										: "border-gray-200 focus:border-e94190 hover:border-gray-300"
+								}`}
+							/>
+						</div>
+						{errors.addressUz && <p className="text-12 text-red-500 mt-1">{errors.addressUz.message}</p>}
 					</div>
 
 					<div>

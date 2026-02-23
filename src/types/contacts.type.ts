@@ -3,8 +3,11 @@ export interface IContact {
 		phone: string;
 		email: string;
 		telegramLink: string;
-		address: string;
 		instagramLink: string;
 		googleMapsLink: string;
+		translations?: {
+			locale: string;
+			address: string;
+		}[];
 	};
 }

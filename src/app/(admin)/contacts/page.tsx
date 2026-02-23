@@ -18,7 +18,7 @@ export default async function ContactsPage() {
 	if (!res.data) {
 		return <div>No contacts found</div>;
 	}
-
+	console.log(res.data);
 	return (
 		<div className="p-8 max-w-[1600px] mx-auto">
 			<div className="flex items-center gap-4 mb-8">
