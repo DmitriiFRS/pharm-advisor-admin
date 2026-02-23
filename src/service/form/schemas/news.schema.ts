@@ -9,6 +9,7 @@ export const newsSchema = z.object({
 	publishedAt: z.string().min(1, "Выберите дату публикации"),
 	descriptionRu: z.string().min(2, "Описание на русском должно быть длиннее 2 символов"),
 	descriptionUz: z.string().min(2, "Описание на узбекском должно быть длиннее 2 символов"),
+	youtubeLink: z.string().optional(),
 	pdf: z
 		.union([
 			z.instanceof(File),
@@ -31,6 +32,7 @@ export interface NewsDetail {
 	title: string;
 	content: string;
 	isPublished: boolean;
+	youtubeLink: string;
 	publishedAt: Date;
 	media: {
 		id: number;

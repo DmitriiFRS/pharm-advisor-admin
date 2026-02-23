@@ -38,6 +38,7 @@ const ArticleCreateForm: React.FC<Props> = ({ initialData }) => {
 			descriptionRu: getLocalizedContent(initialData?.translations, "ru", "content"),
 			descriptionUz: getLocalizedContent(initialData?.translations, "uz", "content"),
 			publishedAt: initialData?.publishedAt ? new Date(initialData.publishedAt).toISOString() : "",
+			youtubeLink: initialData?.youtubeLink || "",
 			image: initialData?.media?.url || null,
 			pdf: initialData?.pdf || null,
 		},
@@ -52,6 +53,7 @@ const ArticleCreateForm: React.FC<Props> = ({ initialData }) => {
 			formData.append("titleUz", data.titleUz);
 			formData.append("descriptionRu", data.descriptionRu);
 			formData.append("descriptionUz", data.descriptionUz);
+			formData.append("youtubeLink", data.youtubeLink || "");
 			formData.append("publishedAt", data.publishedAt);
 
 			if (data.image instanceof File) {
@@ -81,15 +83,15 @@ const ArticleCreateForm: React.FC<Props> = ({ initialData }) => {
 
 			if (!response.ok) {
 				const errorData = await response.json();
-				throw new Error(errorData.error || "Ошибка при сохранении новости");
+				throw new Error(errorData.error || "Ошибка при сохранении статьи");
 			}
 
-			toast.success(initialData?.id ? "Новость успешно обновлена" : "Новость успешно создана");
+			toast.success(initialData?.id ? "Статья успешно обновлена" : "Статья успешно создана");
 
 			if (!initialData?.id) {
 				reset();
 			} else {
-				router.push("/news");
+				router.push("/articles");
 				router.refresh();
 			}
 		} catch (error: unknown) {
@@ -127,6 +129,14 @@ const ArticleCreateForm: React.FC<Props> = ({ initialData }) => {
 								title="Заголовок (UZ)"
 								name="titleUz"
 								placeholder="Sarlavhani kiriting"
+							/>
+
+							<CommonInput
+								register={register}
+								error={errors.youtubeLink}
+								title="Youtube ссылка"
+								name="youtubeLink"
+								placeholder="Youtube ссылка"
 							/>
 
 							<SingleDateSelect
