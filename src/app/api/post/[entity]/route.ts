@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 const ENDPOINT_MAP = {
 	news: ENDPOINTS.POST_NEWS,
 	faqs: ENDPOINTS.POST_FAQS,
+	services: ENDPOINTS.POST_SERVICES,
 } as const;
 
 export async function POST(req: Request, { params }: { params: Promise<{ entity: string }> }) {

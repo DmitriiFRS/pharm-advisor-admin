@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useContext } from "react";
-import { ChevronDown, ChevronUp, HelpCircle, Phone, Newspaper, User, LogOut, Home } from "lucide-react";
+import { ChevronDown, ChevronUp, HelpCircle, Phone, Newspaper, User, LogOut, Home, Heart } from "lucide-react";
 import logo from "@/public/logo.webp";
 import { UserData } from "@/src/context/UserContext";
 
@@ -43,6 +43,14 @@ const menuItems: MenuItem[] = [
 		submenu: [
 			{ title: "Все вопросы-ответы", href: "/faq" },
 			{ title: "Новый вопрос-ответ", href: "/faq/create" },
+		],
+	},
+	{
+		title: "Услуги",
+		icon: Heart,
+		submenu: [
+			{ title: "Все услуги", href: "/services" },
+			{ title: "Новая услуга", href: "/services/create" },
 		],
 	},
 	// {
@@ -85,7 +93,7 @@ const Sidebar: React.FC = () => {
 				<Image src={logo} alt="PharmAdvisor" width={120} height={30} className="object-contain" priority />
 			</div>
 
-			<nav className="flex flex-col gap-2 flex-grow">
+			<nav className="flex flex-col gap-2 grow">
 				{menuItems.map((item) => (
 					<div key={item.title}>
 						{item.submenu ? (
@@ -157,7 +165,7 @@ const Sidebar: React.FC = () => {
 						onClick={() => setShowUserMenu(!showUserMenu)}
 						className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors text-left"
 					>
-						<div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
+						<div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
 							<User className="w-5 h-5 text-gray-500" />
 						</div>
 						<div className="flex flex-col overflow-hidden">

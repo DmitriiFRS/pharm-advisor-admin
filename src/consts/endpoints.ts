@@ -18,4 +18,10 @@ export const ENDPOINTS = {
 	POST_FAQS: "faqs/create",
 	PATCH_FAQS: "faqs/update",
 	DELETE_FAQS: "faqs/delete",
+
+	GET_SERVICES: "services/admin",
+	GET_SERVICES_BY_ID: "services/getById",
+	POST_SERVICES: "services/create",
+	PATCH_SERVICES: "services/update",
+	DELETE_SERVICES: "services/delete",
 };

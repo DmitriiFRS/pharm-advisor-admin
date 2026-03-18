@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 const ENDPOINT_MAP = {
 	news: ENDPOINTS.PATCH_NEWS,
 	faqs: ENDPOINTS.PATCH_FAQS,
+	services: ENDPOINTS.PATCH_SERVICES,
 } as const;
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ entity: string; id: string }> }) {
