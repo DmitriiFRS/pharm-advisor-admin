@@ -8,7 +8,7 @@ export const serviceColumns: Column<IService>[] = [
 	},
 	{
 		header: "Цена",
-		cell: (row) => (row.price ? `${row.price} ₽` : "Не указана"),
+		cell: (row) => (row.price ? `${row.price} сум` : "Не указана"),
 	},
 	{
 		header: "Подпись",
