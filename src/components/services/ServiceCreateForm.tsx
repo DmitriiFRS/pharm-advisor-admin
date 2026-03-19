@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { serviceSchema, ServiceFormData } from "@/src/service/form/schemas/service.schema";
 import ImageUpload from "@/src/components/shared/inputs/ImageUpload";
 import CommonInput from "@/src/components/shared/inputs/CommonInput";
+import NumberInput from "@/src/components/shared/inputs/NumberInput";
 import DynamicStringList from "@/src/components/shared/inputs/DynamicStringList";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -37,6 +38,7 @@ const ServiceCreateForm: React.FC<Props> = ({ initialData }) => {
 			labelRu: getLocalizedContent(initialData?.translations, "ru", "label") || "",
 			labelUz: getLocalizedContent(initialData?.translations, "uz", "label") || "",
 			price: initialData?.price || undefined,
+			order: initialData?.order || undefined,
 			serviceFeaturesRu: initialData?.translations?.find((t) => t.locale === "ru")?.serviceFeatures || [""],
 			serviceFeaturesUz: initialData?.translations?.find((t) => t.locale === "uz")?.serviceFeatures || [""],
 			image: initialData?.media?.url || null,
@@ -57,6 +59,9 @@ const ServiceCreateForm: React.FC<Props> = ({ initialData }) => {
 
 			if (data.price !== undefined && data.price !== "") {
 				formData.append("price", String(data.price));
+			}
+			if (data.order !== undefined && data.order !== "") {
+				formData.append("order", String(data.order));
 			}
 
 			data.serviceFeaturesRu.forEach((item) => {
@@ -119,9 +124,9 @@ const ServiceCreateForm: React.FC<Props> = ({ initialData }) => {
 							<CommonInput
 								register={register}
 								error={errors.labelRu}
-								title="Подпись/Лейбл (RU)"
+								title="Подпись (RU)"
 								name="labelRu"
-								placeholder="Например: популярное"
+								placeholder="Например: 1 мес. работы команды"
 							/>
 							<CommonInput
 								register={register}
@@ -156,9 +161,9 @@ const ServiceCreateForm: React.FC<Props> = ({ initialData }) => {
 							<CommonInput
 								register={register}
 								error={errors.labelUz}
-								title="Подпись/Лейбл (UZ)"
+								title="Подпись (UZ)"
 								name="labelUz"
-								placeholder="Masalan: mashhur"
+								placeholder="Masalan: Jamoaning 1 oylik ishi"
 							/>
 							<CommonInput
 								register={register}
@@ -181,7 +186,17 @@ const ServiceCreateForm: React.FC<Props> = ({ initialData }) => {
 					</div>
 				</div>
 				<div className="grid grid-cols-2 gap-4">
-					<CommonInput register={register} error={errors.price} title="Цена" name="price" type="number" placeholder="Не указана" />
+					<div className="flex flex-col gap-4">
+						<NumberInput control={control} error={errors.price} title="Цена" name="price" placeholder="Не указана" />
+						<NumberInput
+							control={control}
+							error={errors.order}
+							title="Приоритет (сортировка)"
+							name="order"
+							placeholder="0"
+							allowDecimal={false}
+						/>
+					</div>
 					<Controller
 						name="image"
 						control={control}
