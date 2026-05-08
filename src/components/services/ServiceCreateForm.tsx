@@ -37,8 +37,8 @@ const ServiceCreateForm: React.FC<Props> = ({ initialData }) => {
 			descriptionUz: getLocalizedContent(initialData?.translations, "uz", "description") || "",
 			labelRu: getLocalizedContent(initialData?.translations, "ru", "label") || "",
 			labelUz: getLocalizedContent(initialData?.translations, "uz", "label") || "",
-			price: initialData?.price || undefined,
-			order: initialData?.order || undefined,
+			price: initialData?.price ?? undefined,
+			order: initialData?.order ?? undefined,
 			serviceFeaturesRu: initialData?.translations?.find((t) => t.locale === "ru")?.serviceFeatures || [""],
 			serviceFeaturesUz: initialData?.translations?.find((t) => t.locale === "uz")?.serviceFeatures || [""],
 			image: initialData?.media?.url || null,
@@ -57,10 +57,10 @@ const ServiceCreateForm: React.FC<Props> = ({ initialData }) => {
 			formData.append("labelRu", data.labelRu);
 			formData.append("labelUz", data.labelUz);
 
-			if (data.price !== undefined && data.price !== "") {
-				formData.append("price", String(data.price));
+			if (data.price !== undefined) {
+				formData.append("price", data.price === "" || data.price === null ? "null" : String(data.price));
 			}
-			if (data.order !== undefined && data.order !== "") {
+			if (data.order !== undefined) {
 				formData.append("order", String(data.order));
 			}
 
