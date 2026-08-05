@@ -7,6 +7,8 @@ const ENDPOINT_MAP = {
 	news: ENDPOINTS.POST_NEWS,
 	faqs: ENDPOINTS.POST_FAQS,
 	services: ENDPOINTS.POST_SERVICES,
+	outsource: ENDPOINTS.POST_OUTSOURCE,
+	"outsource-faqs": ENDPOINTS.POST_OUTSOURCE_FAQS,
 } as const;
 
 export async function POST(req: Request, { params }: { params: Promise<{ entity: string }> }) {
@@ -41,7 +43,6 @@ export async function POST(req: Request, { params }: { params: Promise<{ entity:
 	if (!(body instanceof FormData)) {
 		(fetchOptions.headers as Record<string, string>)["Content-Type"] = "application/json";
 	}
-	console.log("fetchOptions", fetchOptions);
 	const response = await fetch(url, fetchOptions);
 	if (!response.ok || response.status >= 400) {
 		const error = await bffErrorParse(response);

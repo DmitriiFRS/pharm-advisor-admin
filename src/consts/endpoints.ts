@@ -24,4 +24,16 @@ export const ENDPOINTS = {
 	POST_SERVICES: "services/create",
 	PATCH_SERVICES: "services/update",
 	DELETE_SERVICES: "services/delete",
+
+	GET_OUTSOURCE: "outsource/admin",
+	GET_OUTSOURCE_BY_ID: "outsource/getById",
+	POST_OUTSOURCE: "outsource/create",
+	PATCH_OUTSOURCE: "outsource/update",
+	DELETE_OUTSOURCE: "outsource/delete",
+
+	GET_OUTSOURCE_FAQS: "faqs/outsource/admin",
+	GET_OUTSOURCE_FAQS_BY_ID: "faqs/outsource/getById",
+	POST_OUTSOURCE_FAQS: "faqs/outsource/create",
+	PATCH_OUTSOURCE_FAQS: "faqs/outsource/update",
+	DELETE_OUTSOURCE_FAQS: "faqs/outsource/delete",
 };

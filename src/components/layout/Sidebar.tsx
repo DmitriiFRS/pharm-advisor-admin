@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState, useContext } from "react";
-import { ChevronDown, ChevronUp, HelpCircle, Phone, Newspaper, User, LogOut, Home, Heart } from "lucide-react";
+import { useState, useContext, useEffect } from "react";
+import { BriefcaseBusiness, ChevronDown, ChevronUp, HelpCircle, Phone, Newspaper, User, LogOut, Home, Heart } from "lucide-react";
 import logo from "@/public/logo.webp";
 import { UserData } from "@/src/context/UserContext";
 
@@ -53,6 +53,14 @@ const menuItems: MenuItem[] = [
 			{ title: "Новая услуга", href: "/services/create" },
 		],
 	},
+	{
+		title: "Аутсорс",
+		icon: BriefcaseBusiness,
+		submenu: [
+			{ title: "Контент страницы", href: "/outsource#content" },
+			{ title: "FAQ страницы", href: "/outsource#faq" },
+		],
+	},
 	// {
 	// 	title: "Карточки обучения",
 	// 	icon: GraduationCap,
@@ -72,14 +80,31 @@ const Sidebar: React.FC = () => {
 	const pathname = usePathname();
 	const router = useRouter();
 	const { me, setMe } = useContext(UserData);
-	const [openMenus, setOpenMenus] = useState<string[]>([]);
+	const [openMenus, setOpenMenus] = useState<string[]>(() =>
+		menuItems
+			.filter((item) => item.submenu?.some((subItem) => subItem.href.split("#")[0] === pathname))
+			.map((item) => item.title)
+	);
 	const [showUserMenu, setShowUserMenu] = useState(false);
+	const [activeHash, setActiveHash] = useState("");
+
+	useEffect(() => {
+		const updateHash = () => setActiveHash(window.location.hash);
+		updateHash();
+		window.addEventListener("hashchange", updateHash);
+		return () => window.removeEventListener("hashchange", updateHash);
+	}, []);
 
 	const toggleMenu = (title: string) => {
 		setOpenMenus((prev) => (prev.includes(title) ? prev.filter((item) => item !== title) : [...prev, title]));
 	};
 
-	const isActive = (href: string) => pathname === href;
+	const isActive = (href: string) => {
+		const [hrefPath, hash] = href.split("#");
+		if (pathname !== hrefPath) return false;
+		if (!hash) return true;
+		return activeHash === `#${hash}` || (!activeHash && hash === "content");
+	};
 
 	const handleLogout = async () => {
 		await fetch("/api/auth/remove_token");

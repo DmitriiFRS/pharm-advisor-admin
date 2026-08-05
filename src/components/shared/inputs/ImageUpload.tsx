@@ -3,7 +3,7 @@
 import { useDropzone } from "react-dropzone";
 import { Upload, X } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { cn } from "@/src/lib/utils";
 
 interface Props {
@@ -38,10 +38,14 @@ const ImageUpload: React.FC<Props> = ({ value, onChange, error, className }) => 
 		onChange(null);
 	};
 
-	const previewUrl = value instanceof File ? URL.createObjectURL(value) : value;
+	const previewUrl = useMemo(() => (value instanceof File ? URL.createObjectURL(value) : value), [value]);
 
 	useEffect(() => {
-		console.log(`${process.env.NEXT_PUBLIC_IMAGE_URL}${previewUrl}`);
+		return () => {
+			if (previewUrl?.startsWith("blob:")) {
+				URL.revokeObjectURL(previewUrl);
+			}
+		};
 	}, [previewUrl]);
 
 	return (
@@ -71,7 +75,9 @@ const ImageUpload: React.FC<Props> = ({ value, onChange, error, className }) => 
 							unoptimized
 						/>
 						<button
+							type="button"
 							onClick={removeImage}
+							aria-label="Удалить изображение"
 							className="absolute top-2 right-2 p-1.5 bg-white/80 rounded-full hover:bg-white text-gray-700 transition-colors shadow-sm"
 						>
 							<X size={16} />

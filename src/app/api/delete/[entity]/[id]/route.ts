@@ -7,6 +7,8 @@ const ENDPOINT_MAP = {
 	news: ENDPOINTS.DELETE_NEWS,
 	faqs: ENDPOINTS.DELETE_FAQS,
 	services: ENDPOINTS.DELETE_SERVICES,
+	outsource: ENDPOINTS.DELETE_OUTSOURCE,
+	"outsource-faqs": ENDPOINTS.DELETE_OUTSOURCE_FAQS,
 } as const;
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ entity: string; id: string }> }) {

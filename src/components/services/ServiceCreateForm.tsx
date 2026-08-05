@@ -81,7 +81,6 @@ const ServiceCreateForm: React.FC<Props> = ({ initialData }) => {
 
 			const url = initialData?.id ? `/api/patch/services/${initialData.id}` : "/api/post/services";
 			const method = initialData?.id ? "PATCH" : "POST";
-			console.log(formData);
 			const response = await fetch(url, {
 				method,
 				body: formData,
