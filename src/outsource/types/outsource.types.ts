@@ -69,6 +69,29 @@ export interface OutsourceSpeakerHighlight {
 	translations: OutsourceSpeakerHighlightTranslation[];
 }
 
+export interface OutsourceSpeakerTranslation {
+	id: number;
+	locale: string;
+	name: string;
+	role: string;
+	headline: string;
+	description: string;
+}
+
+export interface OutsourceSpeaker {
+	id: number;
+	outsourcePageId: number;
+	name: string;
+	role: string;
+	headline: string;
+	description: string;
+	order: number;
+	imageId: number | null;
+	image: Media | null;
+	translations: OutsourceSpeakerTranslation[];
+	highlights: OutsourceSpeakerHighlight[];
+}
+
 export interface OutsourceDetail {
 	id: number;
 	startsAt: string;
@@ -86,6 +109,7 @@ export interface OutsourceDetail {
 	heroCards: OutsourceHeroCard[];
 	programItems: OutsourceProgramItem[];
 	speakerHighlights: OutsourceSpeakerHighlight[];
+	speakers: OutsourceSpeaker[];
 }
 
 export interface FaqTranslation {

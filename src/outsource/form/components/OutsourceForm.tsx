@@ -1,12 +1,11 @@
 "use client";
 
 import CommonInput from "@/src/components/shared/inputs/CommonInput";
-import CommonTextarea from "@/src/components/shared/inputs/CommonTextarea";
 import ImageUpload from "@/src/components/shared/inputs/ImageUpload";
 import { getLocalizedContent } from "@/src/helpers/getLocalizedContent";
 import HeroCardsFieldArray from "@/src/outsource/form/components/HeroCardsFieldArray";
 import ProgramItemsFieldArray from "@/src/outsource/form/components/ProgramItemsFieldArray";
-import SpeakerHighlightsFieldArray from "@/src/outsource/form/components/SpeakerHighlightsFieldArray";
+import SpeakersFieldArray from "@/src/outsource/form/components/SpeakersFieldArray";
 import { OutsourceFormData, outsourceSchema } from "@/src/outsource/form/schemas/outsource.schema";
 import { OutsourceDetail } from "@/src/outsource/types/outsource.types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,24 +28,28 @@ const toDatetimeLocal = (value?: string) => {
 	return localDate.toISOString().slice(0, 16);
 };
 
+const emptySpeaker: OutsourceFormData["speakers"][number] = {
+	nameRu: "",
+	nameUz: "",
+	roleRu: "",
+	roleUz: "",
+	headlineRu: "",
+	headlineUz: "",
+	descriptionRu: "",
+	descriptionUz: "",
+	order: 0,
+	imageId: null,
+	image: null,
+	highlights: [],
+};
+
 const getDefaultValues = (initialData?: OutsourceDetail): OutsourceFormData => ({
 	startsAt: toDatetimeLocal(initialData?.startsAt),
 	heroTitleRu: getLocalizedContent(initialData?.translations, "ru", "heroTitle") || initialData?.heroTitle || "",
 	heroTitleUz: getLocalizedContent(initialData?.translations, "uz", "heroTitle") || "",
 	programTitleRu: getLocalizedContent(initialData?.translations, "ru", "programTitle") || initialData?.programTitle || "",
 	programTitleUz: getLocalizedContent(initialData?.translations, "uz", "programTitle") || "",
-	speakerNameRu: getLocalizedContent(initialData?.translations, "ru", "speakerName") || initialData?.speakerName || "",
-	speakerNameUz: getLocalizedContent(initialData?.translations, "uz", "speakerName") || "",
-	speakerRoleRu: getLocalizedContent(initialData?.translations, "ru", "speakerRole") || initialData?.speakerRole || "",
-	speakerRoleUz: getLocalizedContent(initialData?.translations, "uz", "speakerRole") || "",
-	speakerHeadlineRu:
-		getLocalizedContent(initialData?.translations, "ru", "speakerHeadline") || initialData?.speakerHeadline || "",
-	speakerHeadlineUz: getLocalizedContent(initialData?.translations, "uz", "speakerHeadline") || "",
-	speakerDescriptionRu:
-		getLocalizedContent(initialData?.translations, "ru", "speakerDescription") || initialData?.speakerDescription || "",
-	speakerDescriptionUz: getLocalizedContent(initialData?.translations, "uz", "speakerDescription") || "",
 	programImage: initialData?.programImage?.url || null,
-	speakerImage: initialData?.speakerImage?.url || null,
 	heroCards: [...(initialData?.heroCards || [])]
 		.sort((a, b) => a.order - b.order)
 		.map((card) => ({
@@ -69,16 +72,36 @@ const getDefaultValues = (initialData?: OutsourceDetail): OutsourceFormData => (
 			descriptionUz: getLocalizedContent(item.translations, "uz", "description") || "",
 			order: item.order,
 		})),
-	speakerHighlights: [...(initialData?.speakerHighlights || [])]
-		.sort((a, b) => a.order - b.order)
-		.map((item) => ({
-			id: item.id,
-			titleRu: getLocalizedContent(item.translations, "ru", "title") || item.title || "",
-			titleUz: getLocalizedContent(item.translations, "uz", "title") || "",
-			descriptionRu: getLocalizedContent(item.translations, "ru", "description") || item.description || "",
-			descriptionUz: getLocalizedContent(item.translations, "uz", "description") || "",
-			order: item.order,
-		})),
+	speakers: initialData?.speakers?.length
+		? [...initialData.speakers]
+				.sort((a, b) => a.order - b.order)
+				.map((speaker) => ({
+					id: speaker.id,
+					nameRu: getLocalizedContent(speaker.translations, "ru", "name") || speaker.name || "",
+					nameUz: getLocalizedContent(speaker.translations, "uz", "name") || "",
+					roleRu: getLocalizedContent(speaker.translations, "ru", "role") || speaker.role || "",
+					roleUz: getLocalizedContent(speaker.translations, "uz", "role") || "",
+					headlineRu: getLocalizedContent(speaker.translations, "ru", "headline") || speaker.headline || "",
+					headlineUz: getLocalizedContent(speaker.translations, "uz", "headline") || "",
+					descriptionRu:
+						getLocalizedContent(speaker.translations, "ru", "description") || speaker.description || "",
+					descriptionUz: getLocalizedContent(speaker.translations, "uz", "description") || "",
+					order: speaker.order,
+					imageId: speaker.imageId,
+					image: speaker.image?.url || null,
+					highlights: [...(speaker.highlights || [])]
+						.sort((a, b) => a.order - b.order)
+						.map((highlight) => ({
+							id: highlight.id,
+							titleRu: getLocalizedContent(highlight.translations, "ru", "title") || highlight.title || "",
+							titleUz: getLocalizedContent(highlight.translations, "uz", "title") || "",
+							descriptionRu:
+								getLocalizedContent(highlight.translations, "ru", "description") || highlight.description || "",
+							descriptionUz: getLocalizedContent(highlight.translations, "uz", "description") || "",
+							order: highlight.order,
+						})),
+				}))
+		: [{ ...emptySpeaker }],
 });
 
 const OutsourceForm: React.FC<Props> = ({ initialData }) => {
@@ -109,21 +132,9 @@ const OutsourceForm: React.FC<Props> = ({ initialData }) => {
 			formData.append("heroTitleUz", data.heroTitleUz);
 			formData.append("programTitleRu", data.programTitleRu);
 			formData.append("programTitleUz", data.programTitleUz);
-			formData.append("speakerNameRu", data.speakerNameRu);
-			formData.append("speakerNameUz", data.speakerNameUz);
-			formData.append("speakerRoleRu", data.speakerRoleRu);
-			formData.append("speakerRoleUz", data.speakerRoleUz);
-			formData.append("speakerHeadlineRu", data.speakerHeadlineRu);
-			formData.append("speakerHeadlineUz", data.speakerHeadlineUz);
-			formData.append("speakerDescriptionRu", data.speakerDescriptionRu);
-			formData.append("speakerDescriptionUz", data.speakerDescriptionUz);
 
 			if (data.programImage instanceof File) {
 				formData.append("programImage", data.programImage);
-			}
-
-			if (data.speakerImage instanceof File) {
-				formData.append("speakerImage", data.speakerImage);
 			}
 
 			if (initialData?.programImageId !== null && initialData?.programImageId !== undefined) {
@@ -131,14 +142,6 @@ const OutsourceForm: React.FC<Props> = ({ initialData }) => {
 					formData.append("programImageId", "null");
 				} else if (!(data.programImage instanceof File)) {
 					formData.append("programImageId", String(initialData.programImageId));
-				}
-			}
-
-			if (initialData?.speakerImageId !== null && initialData?.speakerImageId !== undefined) {
-				if (data.speakerImage === null) {
-					formData.append("speakerImageId", "null");
-				} else if (!(data.speakerImage instanceof File)) {
-					formData.append("speakerImageId", String(initialData.speakerImageId));
 				}
 			}
 
@@ -171,18 +174,39 @@ const OutsourceForm: React.FC<Props> = ({ initialData }) => {
 					}))
 				)
 			);
-			formData.append(
-				"speakerHighlights",
-				JSON.stringify(
-					data.speakerHighlights.map((item, index) => ({
-						titleRu: item.titleRu,
-						titleUz: item.titleUz,
-						descriptionRu: item.descriptionRu,
-						descriptionUz: item.descriptionUz,
-						order: index,
-					}))
-				)
-			);
+
+			const normalizedSpeakers = data.speakers.map((speaker, speakerIndex) => {
+				if (speaker.image instanceof File) {
+					formData.append(`speakerImage${speakerIndex}`, speaker.image);
+				}
+
+				return {
+					nameRu: speaker.nameRu,
+					nameUz: speaker.nameUz,
+					roleRu: speaker.roleRu,
+					roleUz: speaker.roleUz,
+					headlineRu: speaker.headlineRu,
+					headlineUz: speaker.headlineUz,
+					descriptionRu: speaker.descriptionRu,
+					descriptionUz: speaker.descriptionUz,
+					order: speakerIndex,
+					imageId:
+						speaker.image instanceof File
+							? (speaker.imageId ?? null)
+							: speaker.image === null
+								? null
+								: (speaker.imageId ?? null),
+					highlights: speaker.highlights.map((highlight, highlightIndex) => ({
+						titleRu: highlight.titleRu,
+						titleUz: highlight.titleUz,
+						descriptionRu: highlight.descriptionRu,
+						descriptionUz: highlight.descriptionUz,
+						order: highlightIndex,
+					})),
+				};
+			});
+
+			formData.append("speakers", JSON.stringify(normalizedSpeakers));
 
 			const url = initialData?.id ? `/api/patch/outsource/${initialData.id}` : "/api/post/outsource";
 			const method = initialData?.id ? "PATCH" : "POST";
@@ -273,56 +297,9 @@ const OutsourceForm: React.FC<Props> = ({ initialData }) => {
 
 				<div className="bg-gray-50/50 p-6 rounded-[12px] space-y-6 border border-gray-100">
 					<div>
-						<h2 className="text-18 font-semibold text-black-primary">Спикер</h2>
-						<p className="text-13 text-gray-500 mt-1">Данные спикера, изображение и ключевые преимущества.</p>
+						<h2 className="text-18 font-semibold text-black-primary">Спикеры</h2>
 					</div>
-					<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-						<div className="space-y-4">
-							<h3 className="text-14 font-medium text-gray-600">Русский</h3>
-							<CommonInput register={register} error={errors.speakerNameRu} title="Имя (RU)" name="speakerNameRu" />
-							<CommonInput register={register} error={errors.speakerRoleRu} title="Роль (RU)" name="speakerRoleRu" />
-							<CommonTextarea
-								register={register}
-								error={errors.speakerHeadlineRu}
-								title="Заголовок (RU)"
-								name="speakerHeadlineRu"
-							/>
-							<CommonTextarea
-								register={register}
-								error={errors.speakerDescriptionRu}
-								title="Описание (RU)"
-								name="speakerDescriptionRu"
-							/>
-						</div>
-						<div className="space-y-4">
-							<h3 className="text-14 font-medium text-gray-600">O‘zbekcha</h3>
-							<CommonInput register={register} error={errors.speakerNameUz} title="Имя (UZ)" name="speakerNameUz" />
-							<CommonInput register={register} error={errors.speakerRoleUz} title="Роль (UZ)" name="speakerRoleUz" />
-							<CommonTextarea
-								register={register}
-								error={errors.speakerHeadlineUz}
-								title="Заголовок (UZ)"
-								name="speakerHeadlineUz"
-							/>
-							<CommonTextarea
-								register={register}
-								error={errors.speakerDescriptionUz}
-								title="Описание (UZ)"
-								name="speakerDescriptionUz"
-							/>
-						</div>
-					</div>
-					<div>
-						<p className="text-14 font-medium text-black-primary mb-2">Изображение спикера</p>
-						<Controller
-							name="speakerImage"
-							control={control}
-							render={({ field }) => (
-								<ImageUpload value={field.value} onChange={field.onChange} error={errors.speakerImage?.message} />
-							)}
-						/>
-					</div>
-					<SpeakerHighlightsFieldArray control={control} register={register} errors={errors} />
+					<SpeakersFieldArray control={control} register={register} errors={errors} />
 				</div>
 
 				<div className="flex justify-end pt-6 border-t border-gray-100">

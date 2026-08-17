@@ -11,20 +11,22 @@ interface Props {
 	control: Control<OutsourceFormData>;
 	register: UseFormRegister<OutsourceFormData>;
 	errors: FieldErrors<OutsourceFormData>;
+	speakerIndex: number;
 }
 
-const SpeakerHighlightsFieldArray: React.FC<Props> = ({ control, register, errors }) => {
+const SpeakerHighlightsFieldArray: React.FC<Props> = ({ control, register, errors, speakerIndex }) => {
 	const { fields, append, remove, move } = useFieldArray({
 		control,
-		name: "speakerHighlights",
+		name: `speakers.${speakerIndex}.highlights`,
 		keyName: "fieldKey",
 	});
+	const highlightErrors = errors.speakers?.[speakerIndex]?.highlights;
 
 	return (
 		<div className="space-y-4">
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
 				<div>
-					<h3 className="text-16 font-semibold text-black-primary">Преимущества спикера</h3>
+					<h4 className="text-16 font-semibold text-black-primary">Преимущества спикера</h4>
 					<p className="text-13 text-gray-500 mt-1">Можно добавить не более 3 преимуществ.</p>
 				</div>
 				<button
@@ -47,15 +49,15 @@ const SpeakerHighlightsFieldArray: React.FC<Props> = ({ control, register, error
 			</div>
 
 			{fields.length === 0 && (
-				<div className="rounded-[12px] border border-dashed border-gray-200 bg-white px-5 py-8 text-center text-14 text-gray-500">
+				<div className="rounded-[12px] border border-dashed border-gray-200 bg-gray-50/50 px-5 py-8 text-center text-14 text-gray-500">
 					Преимущества пока не добавлены
 				</div>
 			)}
 
 			{fields.map((field, index) => (
-				<div key={field.fieldKey} className="rounded-[12px] border border-gray-200 bg-white p-5 space-y-5">
+				<div key={field.fieldKey} className="rounded-[12px] border border-gray-200 bg-gray-50/40 p-5 space-y-5">
 					<div className="flex items-center justify-between gap-3">
-						<h4 className="font-medium text-black-primary">Преимущество {index + 1}</h4>
+						<h5 className="font-medium text-black-primary">Преимущество {index + 1}</h5>
 						<FieldArrayControls
 							index={index}
 							count={fields.length}
@@ -68,32 +70,32 @@ const SpeakerHighlightsFieldArray: React.FC<Props> = ({ control, register, error
 						<div className="space-y-4">
 							<CommonInput
 								register={register}
-								error={errors.speakerHighlights?.[index]?.titleRu}
+								error={highlightErrors?.[index]?.titleRu}
 								title="Заголовок (RU)"
-								name={`speakerHighlights.${index}.titleRu`}
+								name={`speakers.${speakerIndex}.highlights.${index}.titleRu`}
 								placeholder="Введите заголовок"
 							/>
 							<CommonTextarea
 								register={register}
-								error={errors.speakerHighlights?.[index]?.descriptionRu}
+								error={highlightErrors?.[index]?.descriptionRu}
 								title="Описание (RU)"
-								name={`speakerHighlights.${index}.descriptionRu`}
+								name={`speakers.${speakerIndex}.highlights.${index}.descriptionRu`}
 								placeholder="Введите описание"
 							/>
 						</div>
 						<div className="space-y-4">
 							<CommonInput
 								register={register}
-								error={errors.speakerHighlights?.[index]?.titleUz}
+								error={highlightErrors?.[index]?.titleUz}
 								title="Заголовок (UZ)"
-								name={`speakerHighlights.${index}.titleUz`}
+								name={`speakers.${speakerIndex}.highlights.${index}.titleUz`}
 								placeholder="Sarlavhani kiriting"
 							/>
 							<CommonTextarea
 								register={register}
-								error={errors.speakerHighlights?.[index]?.descriptionUz}
+								error={highlightErrors?.[index]?.descriptionUz}
 								title="Описание (UZ)"
-								name={`speakerHighlights.${index}.descriptionUz`}
+								name={`speakers.${speakerIndex}.highlights.${index}.descriptionUz`}
 								placeholder="Tavsifni kiriting"
 							/>
 						</div>
@@ -101,8 +103,8 @@ const SpeakerHighlightsFieldArray: React.FC<Props> = ({ control, register, error
 				</div>
 			))}
 
-			{typeof errors.speakerHighlights?.message === "string" && (
-				<p className="text-14 text-red-600">{errors.speakerHighlights.message}</p>
+			{typeof highlightErrors?.message === "string" && (
+				<p className="text-14 text-red-600">{highlightErrors.message}</p>
 			)}
 		</div>
 	);

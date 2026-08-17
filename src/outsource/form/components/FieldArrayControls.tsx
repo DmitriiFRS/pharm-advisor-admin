@@ -6,9 +6,10 @@ interface Props {
 	onMove: (from: number, to: number) => void;
 	onRemove: (index: number) => void;
 	removeLabel: string;
+	disableRemove?: boolean;
 }
 
-const FieldArrayControls: React.FC<Props> = ({ index, count, onMove, onRemove, removeLabel }) => {
+const FieldArrayControls: React.FC<Props> = ({ index, count, onMove, onRemove, removeLabel, disableRemove = false }) => {
 	const buttonClass =
 		"p-2 rounded-lg border border-gray-200 text-gray-500 hover:text-black-primary hover:bg-gray-50 disabled:opacity-35 disabled:cursor-not-allowed transition-colors";
 
@@ -37,7 +38,8 @@ const FieldArrayControls: React.FC<Props> = ({ index, count, onMove, onRemove, r
 			<button
 				type="button"
 				onClick={() => onRemove(index)}
-				className="p-2 rounded-lg border border-red-100 text-red-500 hover:bg-red-50 transition-colors"
+				disabled={disableRemove}
+				className="p-2 rounded-lg border border-red-100 text-red-500 hover:bg-red-50 disabled:opacity-35 disabled:cursor-not-allowed transition-colors"
 				aria-label={removeLabel}
 				title={removeLabel}
 			>
